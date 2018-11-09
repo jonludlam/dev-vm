@@ -16,6 +16,8 @@ Vagrant.configure("2") do |config|
   config.vm.provider "virtualbox" do |vb|
      vb.gui = true
      vb.memory = "4096"
+     vb.customize ["modifyvm", :id, "--vram", "64"]
+
      vb.customize ["modifyvm", :id, "--accelerate3d", "off"]
    end
 
@@ -30,14 +32,14 @@ Vagrant.configure("2") do |config|
     sudo apt-get update
 
 # Desktop
-    sudo apt-get install -y xauth xorg openbox lightdm plymouth
-    sudo apt-get install -y ubuntu-desktop
-
+    sudo apt-get install -y xauth xorg-video-abi-23 openbox lightdm plymouth
+    sudo apt-get install -y xorg ubuntu-desktop virtualbox-guest-x11-hwe
+#
 # Install vagrant
     wget https://releases.hashicorp.com/vagrant/1.9.1/vagrant_1.9.1_x86_64.deb --quiet
     sudo apt-get install -y ./vagrant_1.9.1_x86_64.deb
     sudo apt-get install -y ansible
-    vagrant plugin install vagrant-xenserver
+#    vagrant plugin install vagrant-xenserver
 
 # Install go tools
     sudo apt-get install git
@@ -81,9 +83,9 @@ Vagrant.configure("2") do |config|
     sudo curl https://raw.githubusercontent.com/OCamlPro/ocp-index/master/tools/oct.sh -o /etc/bash_completion.d/oct
 
 # Install Sublime Text
-    sudo apt-add-repository -y "ppa:webupd8team/sublime-text-3"
-    sudo apt-get update
-    sudo apt-get install -y sublime-text-installer
+#    sudo apt-add-repository -y "ppa:webupd8team/sublime-text-3"
+#    sudo apt-get update
+#    sudo apt-get install -y sublime-text-installer
 
 # Install Visual Studio Code
     curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg
@@ -91,35 +93,36 @@ Vagrant.configure("2") do |config|
     sudo sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main" > /etc/apt/sources.list.d/vscode.list'
     sudo apt-get update
     sudo apt-get install -y code
-    code --install-extension hackwaly.ocaml
+    code --install-extension freebroccolo.reasonml
 
 # Install Atom
-    sudo apt-add-repository -y "ppa:webupd8team/atom"
-    sudo apt-get update
-    sudo apt-get install -y atom
-    apm install nuclide ocaml-merlin language-ocaml
+#    sudo apt-add-repository -y "ppa:webupd8team/atom"
+#    sudo apt-get update
+#    sudo apt-get install -y atom
+#    apm install nuclide ocaml-merlin language-ocaml
 
 # Install vim
     sudo apt-get update
     sudo apt-get install -y vim
 
 # Install emacs
-    sudo apt-get update
-    sudo apt-get install -y emacs
+#    sudo apt-get update
+#    sudo apt-get install -y emacs
 
 # Automatically configure installed editor/s to use installed OCaml tools
-    opam install user-setup
-    opam user-setup install
+#    opam install user-setup
+#    opam user-setup install
 
 # Fix gnome-terminal
+    sudo apt-get install -y language-pack-en-base
     sudo localectl set-locale LANG="en_GB.utf8"
 
 # Install Docker - required by planex-buildenv
-    sudo apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
-    sudo apt-add-repository 'deb https://apt.dockerproject.org/repo ubuntu-xenial main'
-    sudo apt-get update
-    sudo apt-get install -y docker-engine
-    sudo usermod -aG docker vagrant
+#    sudo apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
+#    sudo apt-add-repository 'deb https://apt.dockerproject.org/repo ubuntu-xenial main'
+#    sudo apt-get update
+#    sudo apt-get install -y docker-engine
+#    sudo usermod -aG docker vagrant
 
 
 # Reboot required to ensure locale and profile changes are picked up
